@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\Myuser;
-use App\Models\Mypost;
-use App\Models\Mycomment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class PostController extends Controller
+
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $mypost = Mypost::all();
         
-        $mycomment = Mycomment::all();
-        
-        $myuser = Myuser::all();
-
-        $array = array('post' => $mypost, 'user' => $myuser,'comment' => $mycomment);
-
-        return response()->json($array);
     }
 
     /**
@@ -35,18 +25,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $mypost = new Mypost();
-        $mypost->user_id=$request->get('user_id');
-        $mypost->content=$request->get('post_content');
-        $mypost->save();
-
-        $mycomment = Mycomment::all();
-
-        $myuser = Myuser::all();
-
-        $array = array('post' =>$mypost ,'comment' => $mycomment, 'user' => $myuser);
-
-        return response()->json($array);
+        //
     }
 
     /**
@@ -57,11 +36,9 @@ class PostController extends Controller
      */
     public function show($id)
     {
+        $myuser = Myuser::find($id);
 
-        $mypost = Mypost::find($id);
-
-        return response()->json($mypost);
-
+        return response()->json($myuser);
     }
 
     /**
@@ -73,11 +50,12 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $mypost = Mypost::find($id);
-        $mypost->content=$request->get('content');
-        $mypost->update();
-        
-        return response()->json($mypost);
+        $myuser=Myuser::find($id);
+        $myuser->name=$request->get('name');
+        $myuser->email=$request->get('email');
+        $myuser->password=$request->get('password');
+        $myuser->update();
+        return response()->json($myuser);
     }
 
     /**
@@ -88,6 +66,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $myuser = Myuser::find($id);
+        $myuser->delete();
     }
 }

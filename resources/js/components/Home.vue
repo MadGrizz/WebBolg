@@ -14,7 +14,8 @@
                         <div class="card-body">
                             <div v-for="item_user of user" :key="item_user.id">
                                 <div v-if="item_user.id == item_post.user_id">
-                                    <h2>{{item_user.name}}</h2>
+                                    <label>{{item_user.name}}</label>
+                                    <div v-if="this_user==item_post.user_id" class="rb"><a class="btn btn-info rb wt" v-on:click="editpost(item_post.id)">edit</a></div>
                                 </div>
                             </div>
                             <div>
@@ -38,7 +39,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     
-                                    <label >{{item_post.id}}</label>
+                                    
                                     <input type="text" :id="item_post.id" class="from-control w-75" v-model="item_post.comment">
                                     <a class="btn btn-success rb" v-on:click="comment_con(item_post)">comment</a>
                                 </div>
@@ -76,6 +77,7 @@
                     id:'',
                     name:''
                 },
+                this_user:'',
             }
         },
         methods:{
@@ -84,6 +86,7 @@
                     console.log(this.posts=response.data.post)
                     console.log(this.comment=response.data.comment)
                     console.log(this.user=response.data.user)
+                    console.log(this.this_user=localStorage.getItem('us_id'))
                     });
             },
             post_con(){
@@ -96,6 +99,7 @@
     
                 console.log(this.posts)
                 this.getpost()
+                this.post_content=''
                 }).
                 catch((error) => {
                     return error;
@@ -107,17 +111,22 @@
                     comment:obj.comment,
                     user_id:localStorage.getItem('us_id'),
                     post_id:obj.id
-                }).
-                then((data) => {
+                })
+                .then((data) => {
                 console.log(data)
     
                 console.log(this.posts)
                 this.getpost()
-                }).
-                catch((error) => {
+                })
+                .catch((error) => {
                     return error;
                 })
             },
+            editpost(id){
+                console.log(id)
+                localStorage.setItem('post_id',id)
+                window.location.href = '/editpost'
+            }
         
         },
         mounted(){
